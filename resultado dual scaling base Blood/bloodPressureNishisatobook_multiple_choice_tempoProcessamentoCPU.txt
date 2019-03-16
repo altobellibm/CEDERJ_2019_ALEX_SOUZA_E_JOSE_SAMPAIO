@@ -1,0 +1,4 @@
+Nome arquivo: bloodPressureNishisatobook.D18.N15.txt
+Matriz formato: [15,18
+Tempo criar matriz entrada (s):0
+Tempo calcular em CPU (s):0
