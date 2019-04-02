@@ -1,0 +1,35 @@
+Criando a matriz[n][m] de respostas a partir dos dados fornecidos pelo mestre Altobelli.
+
+import numpy as ny
+arq = open('lista1.txt', 'r')
+texto = arq.readlines()
+matriz=[]
+lres=[]
+nrpp = 3
+for linha in texto:
+    limite = 0
+    linElem = linha.split()
+    while limite < len(linElem):
+        a = int(linElem[limite]) - nrpp * limite
+        if (a % 3 == 0):
+            lres += [0,0,1]
+        elif (a % 2 == 0):
+            lres += [0,1,0]
+        else:
+            #from IPython.core.debugger import Tracer; Tracer()()
+            lres += [1,0,0]
+        limite += 1
+    matriz += [lres]
+    lres=[]
+arq.close()
+MPR = ny.matrix(matriz)
+#print(*MPR,sep='\n')
+
+Determinando o número de dimensões
+
+ncol = len(matriz[0])
+nperguntas = ncol//nrpp
+D_e_s=ncol-nperguntas-1
+#print('\nNúmero de colunas = ',ncol)
+#print('Número de perguntas = ',nperguntas)
+#print('Dimensões do espaço solução = ',D_e_s)
