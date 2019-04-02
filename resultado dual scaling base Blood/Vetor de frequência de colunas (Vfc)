@@ -1,0 +1,13 @@
+Vetor de frequência de colunas (Vfc)
+
+Vfcc=[]
+soma=0
+for i in range(ncol):
+    for j in range(len(matriz)):
+        soma+=matriz[j][i]
+    Vfcc.append(soma)
+    soma = 0
+Vfc = ny.sum(MPR, axis=0)
+#print(Vfc.shape,'\n')
+#print(len(Vfcc))
+#print(Vfc,'\n\n',Vfcc)
