@@ -1,4 +1,4 @@
-Matriz transposta da MPR
+Matriz transposta da MPR(Matriz Padrão de Respostas)
 
 import numpy as ny
 MPRt = ny.transpose(MPR) 
