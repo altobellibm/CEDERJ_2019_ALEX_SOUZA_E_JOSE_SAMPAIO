@@ -1,0 +1,15 @@
+arq2=open('bloodPressureNishisatobook.D18.N15.txt', 'r')
+texto2 = arq2.readlines()
+arq2.close()
+confList=[]
+confDesejada=0.4 # 40% de confiança
+for x in texto2:
+    a = x.split()
+    b=float(a[len(a)-1])
+    if b >= confDesejada:
+        for i in range(4):
+            a.pop()
+        a[a.index('==>')]='em'
+        confList.append(a)
+for y in confList:
+    print('projeção de',y)
