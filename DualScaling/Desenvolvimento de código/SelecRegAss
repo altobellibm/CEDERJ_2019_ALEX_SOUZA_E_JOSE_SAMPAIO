@@ -1,0 +1,13 @@
+Selecionando as relações com Confiança igual ou maior que 40%
+
+arq2=open('bloodPressureNishisatobook.D18.N15.txt', 'r')
+texto2 = arq2.readlines()
+arq2.close()
+confList=[]
+confDesejada=0.4 # 40% de confiança
+for x in texto2:
+    a = x.split()
+    b=float(a[len(a)-1])
+    if b >= confDesejada:
+        confList.append(x)
+#print(*confList)

@@ -1,0 +1,79 @@
+Matriz transposta da MPR(Matriz Padrão de Respostas)
+
+import numpy as ny
+MPRt = ny.transpose(MPR) 
+#print(MPRt.shape)
+
+
+Cálculo das matrizes diagonais - MdL = matriz diagonal de linhas(nxn) - MdC = matriz diagonal de colunas(mxm)
+
+import numpy as ny
+MdC = ny.diagflat(Vfc)
+MdL = ny.diagflat(Vfl)
+#print('   Matriz Diagonal de Linhas')
+#print(*MdL, sep='\n')
+#print('     Matriz Diagonal de Colunas')
+#print(*MdC, sep = '\n')
+
+
+Matriz de correlação entre colunas
+
+from numpy import *
+from numpy.linalg import inv
+MdCi = inv(MdC)
+MdLi = inv(MdL)
+Mcc = MPRt * MdLi * MPR * MdCi 
+#print(Mav)
+
+
+Vetor de autovalores(Vaval) e começo da Matriz de autovetores(Mavet)
+
+import numpy.linalg as la
+w,v=la.eig(Mcc)
+Vaval=ny.flip(ny.sort(w, axis=0),0)
+Vaval=Vaval.astype(ny.float32)
+
+#@#@#@#@#@@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#
+            NÃO ENTENDEMOS A UTILIZAÇÃO DO MÉTODO .T.tolist()
+#@#@#@#@#@@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#@#
+Mavat=v.T.tolist()
+
+#lin=1
+#for x in v:
+    #print('{:2} - {:.5f}'.format(lin,x))
+    #print(x.real)
+#    lin+=1
+#print()
+#for y in Mavat:
+#    for x in y:
+#        print('{:.5f}'.format(x.real))
+
+C:\Users\JRicardo\AppData\Local\Continuum\anaconda3\lib\site-packages\ipykernel_launcher.py:4: ComplexWarning: Casting complex values to real discards the imaginary part
+  after removing the cwd from sys.path. ## O que está ocasionando este warning?
+  
+Normalizando o Vaval(Vetor de autovalores)
+
+Vaval=ny.delete(Vaval,0,0) # apaga a solução trivial no vetor de autovalores
+while D_e_s < Vaval.shape[0]:
+    Vaval=ny.delete(Vaval,D_e_s,0)
+lin=1
+#for x in Vaval:
+#    print('{:2} - {:.5f}'.format(lin,x))
+#    lin+=1
+
+
+Pequena solução para encontrar SUP e CONF a partir da matriz normal
+
+s, soma_1, soma_2 = 0,0, 0
+for i in range(0, len(matriz)):
+    #from IPython.core.debugger import Tracer; Tracer()()
+    if matriz[i][5]==1 and matriz[i][0]==1:
+        s +=1
+    if matriz[i][0]==1 and matriz[i][5]==1:
+        soma_1 +=1
+    """if matriz[i][5]==1 and matriz[i][6]==1:
+        soma_2 +=1"""
+print('6 ==> 1 #SUP {} #CONF {:.3f}'.format(s,s/Vfcc[5]))
+print('1 ==> 6 #SUP {} #CONF {:.3f}'.format(soma_1,soma_1/Vfcc[0]))
+6 ==> 1 #SUP 5 #CONF 0.556
+1 ==> 6 #SUP 5 #CONF 1.000
