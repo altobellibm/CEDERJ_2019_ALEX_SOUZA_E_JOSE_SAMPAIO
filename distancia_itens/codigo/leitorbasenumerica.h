@@ -46,6 +46,7 @@ public:
     vector<vector<int>>	getTransation() const {return m_transacoes;}
 
     map<int, int>  getCabecalho() const {return m_cabecalho;}
+    int getIdMatrix(int id) const {return m_cabecalho.at(id);}
     map<int, int>  getCabecalhoIdReal() const {return m_cabecalhoIdReal;}
 
 private:

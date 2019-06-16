@@ -3,6 +3,7 @@
 
 #undef NDEBUG
 #include <assert.h>
+#include <iomanip>
 
 #define EIGEN_RUNTIME_NO_MALLOC // Define this symbol to enable runtime tests for allocations
 
@@ -24,8 +25,9 @@ vector<int> splitInt( string s, char c = ' '){
     vector<int> v;
     vector<string> resul = split(s,c);
 
-    for(auto item : resul)
+    for(auto item : resul){
         v.push_back(atoi(item.c_str()));
+    }
 
     return v;
 }
@@ -39,13 +41,13 @@ string vecto_to_string( vector<int> v, char c = ' '){
     return str_v;
 }
 
-int frequencia(vector<int>& item, Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic>& matrix, int nTransactions ){
+int frequencia(vector<int>& item, Eigen::Matrix<int, Eigen::Dynamic, Eigen::Dynamic>& matrix, int nTransactions , BASE_NUM& base){
     int freq = 0;
     for (int linha = 0; linha < nTransactions; linha++){
         bool bcontem = true;
         for (auto id : item) {
-            if (matrix(linha, id -1) != 1)
-                bcontem = false;
+             if (matrix(linha, base.getIdMatrix(id)) != 1)
+                    bcontem = false;
         }
         if (bcontem)
             freq++;
@@ -57,7 +59,10 @@ void criarNovoArquivoRegras(string _arquivo_regras, BASE_NUM& base, string file_
 
     auto matrix = base.getMatrix();
 
+    std::cout << "lin " << matrix.rows() << "cols " << matrix.cols() << std::endl;
+
     std::ofstream m_fileOutput(file_out);
+    m_fileOutput << std::fixed << std::setprecision(9);
 
     std::ifstream myfile(_arquivo_regras);
 
@@ -69,6 +74,7 @@ void criarNovoArquivoRegras(string _arquivo_regras, BASE_NUM& base, string file_
     int posi = 0;
     std::string line;
     while (getline(myfile, line)){
+       // std::cout << line << std::endl;
         auto pos = line.find("==>");
         string strAntecedente = line.substr(0,pos-1);
         auto antecedente = splitInt(strAntecedente);
@@ -83,18 +89,19 @@ void criarNovoArquivoRegras(string _arquivo_regras, BASE_NUM& base, string file_
         posfim = line.find("#CONF:");
         string suporte = line.substr(pos+1,posfim - (pos + 2));
         int sup = atoi(suporte.c_str());
-        pos = posfim + 5;
-        string confianca = line.substr(pos+2);
 
-        int freqA = frequencia(antecedente,matrix,base.getSizeTransation());
-        int freqC = frequencia(consequente,matrix,base.getSizeTransation());
+        std::vector<int> itemset = antecedente;
+        itemset.insert( itemset.end(), consequente.begin(), consequente.end() );
 
-         m_fileOutput << vecto_to_string(antecedente) + " " + vecto_to_string(consequente) + " " + std::to_string((float)sup/(float)base.getSizeTransation()) + " "
-                         + confianca  + " " + std::to_string((float)freqA/(float)base.getSizeTransation()) + " " + std::to_string((float)freqC/(float)base.getSizeTransation()) << std::endl;
+        int ssuporte = frequencia(itemset,matrix,(int)base.getSizeTransation(),base);
+        int freqA = frequencia(antecedente,matrix,(int)base.getSizeTransation(),base);
+        int freqC = frequencia(consequente,matrix,(int)base.getSizeTransation(),base);
 
-         if (posi % 1000 == 0)
+        double confianca = ((double) ssuporte/ (double)base.getSizeTransation()) / ((double) freqA/ (double)base.getSizeTransation());
 
-                std::cout << "Regra = " << posi++ << std::endl;
+         m_fileOutput << vecto_to_string(antecedente) + " " + vecto_to_string(consequente) + " " + std::to_string((double)sup/(double)base.getSizeTransation()) + " "
+                         + std::to_string(confianca)  + " " + std::to_string((double)freqA/(double)base.getSizeTransation()) + " " + std::to_string((double)freqC/(double)base.getSizeTransation()) << std::endl;
+
     }
 
     myfile.close();
